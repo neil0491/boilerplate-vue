@@ -1,1 +1,1 @@
-export const USER_LOCALE = "userLocale" 
+export const SITE_NAME = "Exemple" 

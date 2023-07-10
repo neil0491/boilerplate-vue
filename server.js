@@ -9,7 +9,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const isTest = process.env.VITEST;
-const hmrPort = 8080;
+const hmrPort = process.env.PORT || 8080;
 
 export async function createServer(
   root = process.cwd(),
@@ -37,7 +37,6 @@ export async function createServer(
       base: "/",
       root,
       logLevel: isTest ? "error" : "info",
-
       server: {
         middlewareMode: true,
         watch: {
@@ -82,11 +81,16 @@ export async function createServer(
         render = (await import("./dist/server/entry-server.js")).render;
       }
 
-      const [appHtml, preloadLinks] = await render(url, manifest);
+      const [appHtml, preloadLinks, headHtml, state] = await render(url, manifest);
 
-      const html = template
+      let html = template
         .replace(`<!--preload-links-->`, preloadLinks)
-        .replace(`<!--app-html-->`, appHtml);
+        .replace(`<!--app-html-->`, appHtml)
+        .replace(`'<pinia-store>'`, state);
+
+      Object.entries(headHtml).forEach(([key, value]) => {
+        html = html.replace(`<!--${key}-->`, value);
+      });
 
       res.status(200).set({ "Content-Type": "text/html" }).end(html);
     } catch (e) {

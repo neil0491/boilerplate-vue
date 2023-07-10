@@ -1,6 +1,30 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
+import { RouterLink, RouterView, useRoute } from "vue-router";
 import LanguageSwitcher from "@/components/LanguageSwitcher.vue";
+import { useHead } from "unhead";
+import Trans from "./i18n/translation";
+import { SITE_NAME } from "@/utils/constants";
+
+const route = useRoute();
+useHead({
+  htmlAttrs: {
+    lang: Trans.currentLocale
+  },
+  meta: [
+    {
+      name: "og:site_name",
+      content: SITE_NAME
+    }
+  ],
+  link: [
+    {
+      rel: "canonical",
+      href: `${import.meta.env.VITE_DOMAIN}${route.path}`
+    }
+  ]
+});
+
+
 </script>
 
 <template>
@@ -9,8 +33,8 @@ import LanguageSwitcher from "@/components/LanguageSwitcher.vue";
 
     <div class="wrapper">
       <nav>
-        <RouterLink :to="$i18nRoute({name: 'home' })">{{ $t("nav.home") }}</RouterLink>
-        <RouterLink :to="$i18nRoute({name: 'about' })">{{ $t("nav.about") }}</RouterLink>
+        <RouterLink :to="$i18nRoute({ name: 'home' })">{{ $t("nav.home") }}</RouterLink>
+        <RouterLink :to="$i18nRoute({ name: 'about' })">{{ $t("nav.about") }}</RouterLink>
         <LanguageSwitcher />
       </nav>
     </div>

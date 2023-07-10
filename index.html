@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html<!--htmlAttrs-->>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <!--headTags-->
     <!--preload-links-->
   </head>
-  <body>
+  <body<!--bodyAttrs-->>
+    <!--bodyTagsOpen-->
     <div id="app"><!--app-html--></div>
     <script type="module" src="/src/entry-client.ts"></script>
+    <!--bodyTags-->
+    <script>
+      window.__INITIAL_STATE__ = '<pinia-store>';
+    </script>
   </body>
 </html>

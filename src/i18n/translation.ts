@@ -5,7 +5,6 @@ import type { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 
 import type { Ii18nRoute } from "~/types";
 
-
 const Trans = {
   get defaultLocale() {
     return import.meta.env.VITE_DEFAULT_LOCALE;
@@ -30,7 +29,7 @@ const Trans = {
     try {
       window.document.querySelector("html")?.setAttribute("lang", newLocale);
       // window.localStorage.setItem("user-locale", newLocale);
-    } catch (error) {}
+    } catch {}
   },
 
   async loadLocaleMessages(locale: string) {
@@ -48,7 +47,7 @@ const Trans = {
 
   getUserLocale() {
     try {
-      let locale: string =
+      const locale: string =
         //@ts-ignore
         window?.navigator?.language || window?.navigator?.userLanguage || Trans.defaultLocale;
 
@@ -57,7 +56,7 @@ const Trans = {
         localeNoRegion: locale.split("-")[0]
       };
     } catch (error) {
-      let locale: string = Trans.defaultLocale;
+      const locale: string = Trans.defaultLocale;
       return {
         locale: locale,
         localeNoRegion: locale.split("-")[0]
@@ -67,7 +66,7 @@ const Trans = {
 
   getPersistedLocale() {
     try {
-      let persistedLocale: string | null = localStorage?.getItem("user-locale");
+      const persistedLocale: string | null = localStorage?.getItem("user-locale");
       if (persistedLocale && Trans.isLocaleSupported(persistedLocale)) {
         return persistedLocale;
       } else {

@@ -1,14 +1,21 @@
 <script setup lang="ts">
+import { useServerSeoMeta } from "unhead";
 import { RouterView } from "vue-router";
-import Trans from "@/i18n/translation";
 
+useServerSeoMeta({
+  title: "Home",
+  description: "My Home page",
+  ogDescription: "Still Home my Home page",
+  ogTitle: "Home",
+  ogImage: "https://example.com/image.png",
+  twitterCard: "summary_large_image"
+});
 </script>
 
 <template>
   <main>
-    
-    Home Page
-  <div>{{ $route.params }}</div>
+    <div>Home Page</div>
+    <div>{{ $route.params }}</div>
   </main>
   <router-view />
 </template>

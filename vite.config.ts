@@ -1,8 +1,10 @@
-import {resolve, dirname} from "node:path";
+import { resolve, dirname } from "node:path";
 import { defineConfig } from "vite";
 import vuePlugin from "@vitejs/plugin-vue";
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 import { fileURLToPath } from "node:url";
+import UnheadVite from "@unhead/addons/vite";
+
 
 const virtualFile = "@virtual-file";
 const virtualId = "\0" + virtualFile;
@@ -23,8 +25,9 @@ export default defineConfig(({ command, ssrBuild }) => ({
     vuePlugin(),
     VueI18nPlugin({
       runtimeOnly: false,
-      include: resolve(dirname(fileURLToPath(import.meta.url)), './src/i18n/locales/**'), // provide a path to the folder where you'll store translation data (see below)
+      include: resolve(dirname(fileURLToPath(import.meta.url)), "./src/i18n/locales/**") // provide a path to the folder where you'll store translation data (see below)
     }),
+    UnheadVite(),
     {
       name: "virtual",
       resolveId(id) {
@@ -107,9 +110,9 @@ export default defineConfig(({ command, ssrBuild }) => ({
       };
     })()
   ],
-  resolve:{
+  resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "@": fileURLToPath(new URL("./src", import.meta.url))
       // vue: process.env.VITE_NODE_ENV === "production" ? "vue" : "vue/dist/vue.esm-bundler.js"
     }
   },

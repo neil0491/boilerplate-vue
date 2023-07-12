@@ -5,6 +5,8 @@ import { useHead } from "unhead";
 import Trans from "./i18n/translation";
 import { SITE_NAME } from "@/utils/constants";
 
+import Logo from "@/assets/logo.svg";
+
 const route = useRoute();
 useHead({
   htmlAttrs: {
@@ -23,39 +25,31 @@ useHead({
     }
   ]
 });
-
-
 </script>
 
 <template>
   <header>
-    <!-- <img alt="Vue logo" class="logo" src="Logo" width="125" height="125" /> -->
+    <nav>
+      <img alt="Vue logo" class="logo" :src="Logo" width="125" height="125" />
+      <RouterLink :to="$i18nRoute({ name: 'home' })">{{ $t("nav.home") }}</RouterLink>
+      <RouterLink :to="$i18nRoute({ name: 'about' })">{{ $t("nav.about") }}</RouterLink>
 
-    <div class="wrapper">
-      <nav>
-        <RouterLink :to="$i18nRoute({ name: 'home' })">{{ $t("nav.home") }}</RouterLink>
-        <RouterLink :to="$i18nRoute({ name: 'about' })">{{ $t("nav.about") }}</RouterLink>
-        <LanguageSwitcher />
-      </nav>
-    </div>
+      <LanguageSwitcher />
+    </nav>
   </header>
   <router-view v-slot="{ Component }">
-    <Suspense>
-      <div>
-        <component :is="Component" />
-      </div>
-    </Suspense>
+    <component :is="Component" />
   </router-view>
 </template>
 
 <style scoped>
 header {
   line-height: 1.5;
-  max-height: 100vh;
 }
 
 .logo {
   display: block;
+  width: 2rem;
   margin: 0 auto 2rem;
 }
 
@@ -64,6 +58,9 @@ nav {
   font-size: 12px;
   text-align: center;
   margin-top: 2rem;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
 }
 
 nav a.router-link-exact-active {
@@ -85,20 +82,8 @@ nav a:first-of-type {
 }
 
 @media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
   .logo {
     margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
   }
 
   nav {

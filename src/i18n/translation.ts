@@ -14,11 +14,17 @@ const Trans = {
     return import.meta.env.VITE_SUPPORTED_LOCALES.split(",");
   },
 
+  get t() {
+    return i18n.global.t;
+  },
+
   get currentLocale() {
+    //@ts-ignore
     return i18n.global.locale.value;
   },
 
   set currentLocale(newLocale) {
+    //@ts-ignore
     i18n.global.locale.value = newLocale;
   },
 
@@ -29,7 +35,9 @@ const Trans = {
     try {
       window.document.querySelector("html")?.setAttribute("lang", newLocale);
       // window.localStorage.setItem("user-locale", newLocale);
-    } catch {}
+    } catch (e) {
+      console.warn(e);
+    }
   },
 
   async loadLocaleMessages(locale: string) {

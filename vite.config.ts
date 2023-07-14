@@ -1,7 +1,5 @@
-import { resolve, dirname } from "node:path";
 import { defineConfig } from "vite";
 import vuePlugin from "@vitejs/plugin-vue";
-import VueI18nPlugin from "@intlify/unplugin-vue-i18n/vite";
 import { fileURLToPath } from "node:url";
 import UnheadVite from "@unhead/addons/vite";
 
@@ -23,10 +21,6 @@ export default defineConfig(({ command, ssrBuild }) => ({
   base,
   plugins: [
     vuePlugin(),
-    VueI18nPlugin({
-      runtimeOnly: false,
-      include: resolve(dirname(fileURLToPath(import.meta.url)), "./src/i18n/locales/**") // provide a path to the folder where you'll store translation data (see below)
-    }),
     UnheadVite(),
     {
       name: "virtual",
@@ -41,7 +35,7 @@ export default defineConfig(({ command, ssrBuild }) => ({
           // Force a mismatch error if ssrBuild is different from ssrFromOptions
           return `export default { msg: '${
             command === "build" && !!ssrBuild !== ssrFromOptions
-              ? `defineConfig ssrBuild !== ssr from load options`
+              ? "defineConfig ssrBuild !== ssr from load options"
               : "hi"
           }' }`;
         }
@@ -58,9 +52,9 @@ export default defineConfig(({ command, ssrBuild }) => ({
       },
       load(id) {
         if (id === virtualId) {
-          return `export { msg } from "@nested-virtual-file";`;
+          return "export { msg } from \"@nested-virtual-file\";";
         } else if (id === nestedVirtualId) {
-          return `export const msg = "[success] from conventional virtual file"`;
+          return "export const msg = \"[success] from conventional virtual file\"";
         }
       }
     },

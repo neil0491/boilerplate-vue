@@ -4,8 +4,12 @@ export default {
       dateStyle: "short"
     },
     longFormat: {
-      year: 'numeric', month: 'short', day: 'numeric',
-      weekday: 'short', hour: 'numeric', minute: 'numeric'
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      weekday: "short",
+      hour: "numeric",
+      minute: "numeric"
     }
   },
   ru: {
@@ -13,8 +17,12 @@ export default {
       dateStyle: "short"
     },
     longFormat: {
-      year: 'numeric', month: 'short', day: 'numeric',
-      weekday: 'short', hour: 'numeric', minute: 'numeric'
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      weekday: "short",
+      hour: "numeric",
+      minute: "numeric"
     }
   }
-}
+};

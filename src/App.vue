@@ -6,11 +6,14 @@ import Trans from "./i18n/translation";
 import { SITE_NAME } from "@/utils/constants";
 
 import Logo from "@/assets/logo.svg";
-
 const route = useRoute();
+
 useHead({
   htmlAttrs: {
     lang: Trans.currentLocale
+  },
+  bodyAttrs: {
+    class: "dark-theme"
   },
   meta: [
     {
@@ -25,21 +28,34 @@ useHead({
     }
   ]
 });
+
+const switchTheme = () => {
+  const body = document.querySelector("body");
+  if (body?.classList.contains("dark-theme")) {
+    body?.classList.remove("dark-theme");
+  } else {
+    body?.classList.add("dark-theme");
+  }
+};
 </script>
 
 <template>
-  <header>
-    <nav>
-      <img alt="Vue logo" class="logo" :src="Logo" width="125" height="125" />
-      <RouterLink :to="$i18nRoute({ name: 'home' })">{{ $t("nav.home") }}</RouterLink>
-      <RouterLink :to="$i18nRoute({ name: 'about' })">{{ $t("nav.about") }}</RouterLink>
-
-      <LanguageSwitcher />
-    </nav>
-  </header>
-  <router-view v-slot="{ Component }">
-    <component :is="Component" />
-  </router-view>
+  <div>
+    <header>
+      <nav>
+        <img alt="Vue logo" class="logo" :src="Logo" width="125" height="125" />
+        <RouterLink :to="$i18nRoute({ name: 'home' })">{{ $t("nav.home") }}</RouterLink>
+        <RouterLink :to="$i18nRoute({ name: 'about' })">{{ $t("nav.about") }}</RouterLink>
+        <LanguageSwitcher />
+        <button @click="switchTheme">Swith Theme</button>
+      </nav>
+    </header>
+    <router-view v-slot="{ Component }">
+      <Suspense>
+        <component :is="Component" />
+      </Suspense>
+    </router-view>
+  </div>
 </template>
 
 <style scoped>

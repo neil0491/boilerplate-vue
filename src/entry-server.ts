@@ -22,7 +22,7 @@ export async function render(url: string, manifest: any) {
   const preloadLinks = renderPreloadLinks(ctx.modules, manifest);
   const headHtml = await renderSSRHead(head);
   const state = JSON.stringify(pinia.state.value);
-  
+
   return [html, preloadLinks, headHtml, state];
 }
 

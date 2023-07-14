@@ -14,7 +14,6 @@ useServerSeoMeta({
 
 const store = useCounterStore();
 onServerPrefetch(() => {
-
   store.increment();
   store.increment();
 });

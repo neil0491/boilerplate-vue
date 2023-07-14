@@ -84,9 +84,9 @@ export async function createServer(
       const [appHtml, preloadLinks, headHtml, state] = await render(url, manifest);
 
       let html = template
-        .replace(`<!--preload-links-->`, preloadLinks)
-        .replace(`<!--app-html-->`, appHtml)
-        .replace(`'<pinia-store>'`, state);
+        .replace("<!--preload-links-->", preloadLinks)
+        .replace("<!--app-html-->", appHtml)
+        .replace("'<pinia-store>'", state);
 
       Object.entries(headHtml).forEach(([key, value]) => {
         html = html.replace(`<!--${key}-->`, value);

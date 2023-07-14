@@ -16,19 +16,19 @@ const routes: readonly RouteRecordRaw[] = [
       {
         path: "",
         name: "home",
-        component: () => import("@/pages/Home.vue")
+        component: () => import("@/pages/HomePage.vue")
       },
       {
         path: "about",
         name: "about",
-        component:  () =>  import("@/pages/About.vue")
+        component: () => import("@/pages/AboutPage.vue")
       }
-    ], 
+    ]
   },
   {
     path: "/:catchAll(.*)",
-    name: "404", 
-    component: () =>  import("@/pages/404.vue"),
+    name: "404",
+    component: () => import("@/pages/404Page.vue")
   }
 ];
 

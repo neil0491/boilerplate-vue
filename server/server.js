@@ -5,11 +5,17 @@ import express from "express";
 import cookieParser from "cookie-parser";
 
 import dotenv from "dotenv";
+import { initCacheClient } from "./cache.js";
 
 dotenv.config();
 
 const isTest = process.env.VITEST;
 const hmrPort = process.env.PORT || 8080;
+const setCasheTTL = 1 * 60;
+
+const getCacheKey = (url) => {
+  return `ssr_${url}`;
+};
 
 export async function createServer(
   root = process.cwd(),
@@ -18,10 +24,10 @@ export async function createServer(
   const __dirname = path.dirname(fileURLToPath(import.meta.url));
   const resolve = (p) => path.resolve(__dirname, p);
 
-  const indexProd = isProd ? fs.readFileSync(resolve("dist/client/index.html"), "utf-8") : "";
+  const indexProd = isProd ? fs.readFileSync(resolve("../dist/client/index.html"), "utf-8") : "";
 
   const manifest = isProd
-    ? JSON.parse(fs.readFileSync(resolve("dist/client/ssr-manifest.json"), "utf-8"))
+    ? JSON.parse(fs.readFileSync(resolve("../dist/client/ssr-manifest.json"), "utf-8"))
     : {};
 
   const app = express();
@@ -36,7 +42,6 @@ export async function createServer(
     ).createServer({
       base: "/",
       root,
-      logLevel: isTest ? "error" : "info",
       server: {
         middlewareMode: true,
         watch: {
@@ -56,7 +61,7 @@ export async function createServer(
     app.use((await import("compression")).default());
     app.use(
       "/",
-      (await import("serve-static")).default(resolve("dist/client"), {
+      (await import("serve-static")).default(resolve("../dist/client"), {
         index: false
       })
     );
@@ -64,23 +69,32 @@ export async function createServer(
 
   app.use(cookieParser());
 
+  const cache = await initCacheClient();
+
   app.use("*", async (req, res) => {
     try {
-      const url = req.originalUrl;
-      // console.log("Cookies: ", req.cookies[process.env.VITE_COOKIE_LOCALE]);
-
       let template, render;
+
+      const url = req.originalUrl;
+
+      const cacheKey = getCacheKey(url);
+      const isCached = await cache.has(cacheKey);
+
+      if (isCached) {
+        const cached = await cache.get(cacheKey);
+        return res.status(200).set({ "Content-Type": "text/html" }).end(cached);
+      }
+
       if (!isProd) {
         // always read fresh template in dev
-        template = fs.readFileSync(resolve("index.html"), "utf-8");
+        template = fs.readFileSync(resolve("../index.html"), "utf-8");
         template = await vite.transformIndexHtml(url, template);
-        render = (await vite.ssrLoadModule("/src/entry-server.ts")).render;
+        render = (await vite.ssrLoadModule("./src/entry-server.ts")).render;
       } else {
         template = indexProd;
         // @ts-ignore
-        render = (await import("./dist/server/entry-server.js")).render;
+        render = (await import("../dist/server/entry-server.js")).render;
       }
-
       const [appHtml, preloadLinks, headHtml, state] = await render(url, manifest);
 
       let html = template
@@ -91,7 +105,7 @@ export async function createServer(
       Object.entries(headHtml).forEach(([key, value]) => {
         html = html.replace(`<!--${key}-->`, value);
       });
-
+      cache.set(cacheKey, html, setCasheTTL);
       res.status(200).set({ "Content-Type": "text/html" }).end(html);
     } catch (e) {
       vite && vite.ssrFixStacktrace(e);

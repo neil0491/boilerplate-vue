@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { onServerPrefetch } from "vue";
 import { RouterView } from "vue-router";
 import { useServerSeoMeta } from "unhead";
-import { useOnClickOutside } from "@/composables/useOnClickOutside";
+import { useNewsStore } from "@/stores/news";
 
 useServerSeoMeta({
   title: "Home",
@@ -13,24 +13,27 @@ useServerSeoMeta({
   twitterCard: "summary_large_image"
 });
 
-const square = ref<HTMLDivElement | null>(null);
-
-const isClikedSquare = ref(false);
-
-useOnClickOutside(square, () => {
-  isClikedSquare.value = false;
+const storeNews = useNewsStore();
+onServerPrefetch(async () => {
+  await storeNews.fetchNews();
 });
+storeNews.fetchNews();
 </script>
 
 <template>
   <main>
     <div>Home Page</div>
-    <div>{{ $route.params }}</div>
+    <div v-if="storeNews.status === 'loading'">Loading . . .</div>
+    <div v-else>
+      <div v-for="item in storeNews.news" :key="item.id">
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.brief }}</p>
+        <img width="300" :src="item.image.thumbnail" :alt="item.title" srcset="" />
+        <br />
+        <br />
+      </div>
+    </div>
   </main>
-  <div ref="square" class="square" @click="isClikedSquare = true">
-    <span v-if="isClikedSquare">Click Inside</span>
-    <span v-else>Click Outside</span>
-  </div>
   <router-view />
 </template>
 

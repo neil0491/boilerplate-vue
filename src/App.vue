@@ -1,19 +1,19 @@
 <script setup lang="ts">
 import { RouterLink, RouterView, useRoute } from "vue-router";
 import LanguageSwitcher from "@/components/LanguageSwitcher.vue";
-import { useHead } from "unhead";
+import { useServerHead } from "unhead";
 import Trans from "./i18n/translation";
 import { SITE_NAME } from "@/utils/constants";
 
 import Logo from "@/assets/logo.svg";
 const route = useRoute();
 
-useHead({
+useServerHead({
   htmlAttrs: {
     lang: Trans.currentLocale
   },
   bodyAttrs: {
-    class: "dark-theme"
+    // class: "dark-theme"
   },
   meta: [
     {

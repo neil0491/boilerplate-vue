@@ -35,8 +35,8 @@ const Trans = {
     try {
       window.document.querySelector("html")?.setAttribute("lang", newLocale);
       // window.localStorage.setItem("user-locale", newLocale);
-    } catch (e) {
-      console.warn(e);
+    } catch {
+      console.warn("Is not Client");
     }
   },
 

@@ -1,4 +1,4 @@
-function ruPluralizationRules(choice, choicesLength) {
+function ruPluralizationRules(choice: number, choicesLength: number) {
   if (choice === 0) {
     return 0;
   }

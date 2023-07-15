@@ -4,7 +4,7 @@ import { renderSSRHead } from "@unhead/ssr";
 import { createApp } from "./main";
 
 export async function render(url: string, manifest: any) {
-  const { app, router, head, pinia } = createApp();
+  const { app, router, head, pinia, i18n } = createApp();
   // set the router to the desired URL before rendering
   await router.push(url);
   await router.isReady();
@@ -23,7 +23,7 @@ export async function render(url: string, manifest: any) {
   const headHtml = await renderSSRHead(head);
   const state = JSON.stringify(pinia.state.value);
 
-  return [html, preloadLinks, headHtml, state];
+  return [html, preloadLinks, headHtml, state, i18n];
 }
 
 function renderPreloadLinks(modules: any, manifest: any) {

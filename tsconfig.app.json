@@ -13,7 +13,6 @@
     "inlineSources": true,
     "rootDir": ".",
     "rootDirs": ["."],
-    "baseUrl": ".",
     "types": ["node"],
     "paths": {
       "@/*": ["./src/*"],

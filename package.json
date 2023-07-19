@@ -11,7 +11,7 @@
     "build:server": "vite build --ssr src/entry-server.ts --outDir dist/server",
     "build:server:noExternal": "vite build --config vite.config.noexternal.js --ssr src/entry-server.ts --outDir dist/server",
     "generate": "vite build --ssrManifest --outDir dist/static && npm run build:server && node prerender",
-    "serve": "cross-env NODE_ENV=production node server.js",
+    "serve": "cross-env NODE_ENV=production node server/server.js",
     "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "format": "prettier --write src/"

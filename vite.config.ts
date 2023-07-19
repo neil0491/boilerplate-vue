@@ -44,18 +44,18 @@ export default defineConfig(({ command, ssrBuild }) => ({
   ],
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url))
-      // vue: process.env.VITE_NODE_ENV === "production" ? "vue" : "vue/dist/vue.esm-bundler.js"
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+      vue: process.env.VITE_NODE_ENV === "production" ? "vue" : "vue/dist/vue.esm-bundler.js"
     }
   },
   experimental: {
-    // renderBuiltUrl(filename, { hostType, type, ssr }) {
-    //   if (ssr && type === "asset" && hostType === "js") {
-    //     return {
-    //       runtime: `__ssr_vue_processAssetPath(${JSON.stringify(filename)})`
-    //     };
-    //   }
-    // }
+    renderBuiltUrl(filename, { hostType, type, ssr }) {
+      if (ssr && type === "asset" && hostType === "js") {
+        return {
+          runtime: `__ssr_vue_processAssetPath(${JSON.stringify(filename)})`
+        };
+      }
+    }
   },
   build: {
     minify: false

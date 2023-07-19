@@ -31,6 +31,7 @@ storeNews.fetchNews();
           imgContainerClass="custome-style"
           :src="item.image.medium"
           :alt="item.title"
+          :srcPlaceholder="item.image.thumbnail"
         ></LazyImage>
         <h3>{{ item.title }}</h3>
         <p>{{ item.brief }}</p>

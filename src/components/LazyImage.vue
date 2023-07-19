@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, h, onBeforeUnmount, onMounted, reactive, ref, useAttrs } from "vue/";
+import { computed, h, onBeforeUnmount, onMounted, reactive, ref, useAttrs } from "vue";
 
 interface IStateImage {
   observer: null | IntersectionObserver;

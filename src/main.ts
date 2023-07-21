@@ -4,7 +4,7 @@ import { createSSRApp } from "vue";
 import { createPinia } from "pinia";
 import App from "./App.vue";
 
-import { createRouter } from "./router";
+import { router } from "./router";
 import i18n from "./i18n";
 import Trans from "./i18n/translation";
 import { createHead } from "unhead";
@@ -13,7 +13,6 @@ export function createApp() {
   const app = createSSRApp(App);
   const pinia = createPinia();
   app.use(pinia);
-  const router = createRouter();
   app.use(router);
   app.use(i18n);
 

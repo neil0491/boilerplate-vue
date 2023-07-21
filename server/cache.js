@@ -27,7 +27,7 @@ export const initCacheClient = async () => {
   let cacheClient = null;
 
   cacheClient = getLRUClient();
-  console.info("[cache]", "LRU store readied!");
+  // console.info("[cache]", "LRU store readied!");
 
   await cacheClient.clear();
   return cacheClient;

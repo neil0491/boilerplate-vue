@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { onServerPrefetch } from "vue";
-import { RouterView } from "vue-router";
+import { watch, onServerPrefetch } from "vue";
+import { RouterView, useRouter } from "vue-router";
 import { useServerSeoMeta } from "unhead";
 import { useNewsStore } from "@/stores/news";
 import LazyImage from "@/components/LazyImage.vue";
+import Trans from "@/i18n/translation";
 
 useServerSeoMeta({
   title: "Home",
@@ -14,17 +15,33 @@ useServerSeoMeta({
   twitterCard: "summary_large_image"
 });
 
+const router = useRouter();
 const storeNews = useNewsStore();
+
 onServerPrefetch(async () => {
   await storeNews.fetchNews();
+  if (storeNews.getStatus === 404) {
+    router.push({ name: "NotFound" });
+  }
 });
 storeNews.fetchNews();
+
+watch(
+  () => Trans.currentLocale,
+  (val) => {
+    if (val) {
+      storeNews.refreshStore();
+      storeNews.fetchNews();
+    }
+  }
+);
 </script>
 
 <template>
   <main>
     <div class="title">Home Page</div>
-    <div v-if="storeNews.status === 'loading'">Loading . . .</div>
+    <div v-if="storeNews.getStatus === 'loading'">Loading . . .</div>
+    <div v-else-if="storeNews.getStatus === 'error'">Error page</div>
     <div class="wrapper-news" v-else>
       <div class="news-item" v-for="item in storeNews.news" :key="item.id">
         <LazyImage

@@ -19,7 +19,6 @@ const switchLanguage = async (event: any) => {
       params: { locale: newLocale === Trans.defaultLocale ? "" : newLocale }
     });
   } catch (e) {
-    console.log(e);
     router.push("/");
   }
 };

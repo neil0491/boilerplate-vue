@@ -11,5 +11,5 @@ if (window.__INITIAL_STATE__) {
 router.isReady().then(() => {
   app.mount("#app");
 
-  console.log("hydrated");
+  // console.log("hydrated");
 });

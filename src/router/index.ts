@@ -26,13 +26,20 @@ const routes: readonly RouteRecordRaw[] = [
     ]
   },
   {
+    path: "/not-found",
+    name: "NotFound",
+    component: () => import("@/pages/404Page.vue")
+  },
+  {
     path: "/:catchAll(.*)",
     name: "404",
-    component: () => import("@/pages/404Page.vue")
+    redirect: "/not-found",
+    component: () => import("@/pages/404Page.vue"),
+    children: []
   }
 ];
 
-export function createRouter() {
+function createRouter() {
   const router = _createRouter({
     // use appropriate history implementation for server/client
     // import.meta.env.SSR is injected by Vite.
@@ -42,3 +49,5 @@ export function createRouter() {
 
   return router;
 }
+
+export const router = createRouter();

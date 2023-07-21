@@ -95,7 +95,9 @@ export async function createServer(
         // @ts-ignore
         render = (await import("../dist/server/entry-server.js")).render;
       }
-      const [appHtml, preloadLinks, headHtml, state] = await render(url, manifest);
+      const [appHtml, preloadLinks, headHtml, state, router] = await render(url, manifest);
+
+      const currentRouteName = router.currentRoute.value.name;
 
       let html = template
         .replace("<!--preload-links-->", preloadLinks)
@@ -106,7 +108,12 @@ export async function createServer(
         html = html.replace(`<!--${key}-->`, value);
       });
       cache.set(cacheKey, html, setCasheTTL);
-      res.status(200).set({ "Content-Type": "text/html" }).end(html);
+
+      if (currentRouteName === "NotFound") {
+        res.status(404).set({ "Content-Type": "text/html" }).end(html);
+      } else {
+        res.status(200).set({ "Content-Type": "text/html" }).end(html);
+      }
     } catch (e) {
       vite && vite.ssrFixStacktrace(e);
       console.log(e.stack);

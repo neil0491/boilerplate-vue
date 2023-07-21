@@ -115,7 +115,7 @@ const Trans = {
       return next();
     }
 
-    if (!Trans.isLocaleSupported(paramLocale) || paramLocale === Trans.defaultLocale) {
+    if (paramLocale === Trans.defaultLocale) {
       await Trans.switchLanguage(Trans.guessDefaultLocale());
       return next({
         name: to.name?.toString(),
@@ -123,6 +123,10 @@ const Trans = {
           locale: ""
         }
       });
+    }
+
+    if (!Trans.isLocaleSupported(paramLocale)) {
+      return next({ name: "NotFound" });
     }
 
     await Trans.switchLanguage(paramLocale);

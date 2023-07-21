@@ -34,7 +34,7 @@ const routesToPrerender = fs
 
     const filePath = `dist/static${url === "/" ? "/index" : url}.html`;
     fs.writeFileSync(toAbsolute(filePath), html);
-    console.log("pre-rendered:", filePath);
+    // console.log("pre-rendered:", filePath);
   }
 
   // done, delete ssr manifest

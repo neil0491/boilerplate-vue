@@ -1,8 +1,11 @@
-import axios from "axios";
+import { router } from "@/router";
+import { api } from "@/service/api";
+import type { AxiosError } from "axios";
 import { defineStore } from "pinia";
+
 interface IDataFetch {
   news: any[];
-  status: "init" | "loading" | "loaded";
+  status: "init" | "loading" | "loaded" | "error" | 404;
 }
 
 export const useNewsStore = defineStore("news", {
@@ -16,20 +19,23 @@ export const useNewsStore = defineStore("news", {
   },
   actions: {
     async fetchNews() {
-      if (this.news.length > 0) {
-        return;
+      try {
+        this.status = "loading";
+        const news = await api.fetchNews();
+        this.news = news.results;
+        this.status = "loaded";
+      } catch (e: any) {
+        if (e?.response?.status === 404) {
+          this.status = 404;
+          router.push({ name: "NotFound" });
+        } else {
+          this.status = "error";
+        }
+        return e;
       }
-      this.status = "loading";
-      await axios
-        .get("https://api.zamon.uz/api/v3/uz/news/list")
-        .then((res) => {
-          this.status = "loaded";
-          this.news = res.data.results;
-        })
-        .catch((err) => {
-          this.status = "loaded";
-          console.log(err);
-        });
+    },
+    refreshStore() {
+      this.news = [];
     }
   }
 });

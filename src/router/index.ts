@@ -13,7 +13,6 @@ const routes: readonly RouteRecordRaw[] = [
   {
     path: "/:locale?",
     component: RouterView,
-
     children: [
       {
         path: "",
@@ -34,22 +33,18 @@ const routes: readonly RouteRecordRaw[] = [
         path: "not-found",
         name: "NotFound",
         component: () => import("@/pages/404Page.vue")
-      },
-      {
-        path: ":catchAll(.*)",
-        name: "404",
-        component: () => import("@/pages/404Page.vue")
-        // redirect: Trans.i18nRoute({ name: "NotFound" })
       }
     ]
+  },
+  {
+    path: "/:catchAll(.*)",
+    name: "404",
+    redirect: (to) => {
+      const locale = to?.params?.catchAll?.toString().split("/")[0] || "";
+      return Trans.i18nRoute({ name: "NotFound", params: { locale } });
+    }
   }
 ];
-
-const beforeEach = async (
-  to: RouteLocationNormalized,
-  _from: RouteLocationNormalized,
-  next: NavigationGuardNext
-) => {};
 
 function createRouter() {
   const router = _createRouter({

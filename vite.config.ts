@@ -58,7 +58,8 @@ export default defineConfig(({ command, ssrBuild }) => ({
     // }
   },
   build: {
-    minify: false
+    target: "esnext",
+    minify: true
   },
   ssr: {
     target: "node"

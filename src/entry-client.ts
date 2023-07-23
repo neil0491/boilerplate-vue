@@ -1,7 +1,6 @@
 import { createApp } from "./main";
-import Cookies from "js-cookie";
 
-const { app, router, pinia } = await createApp(Cookies.get("userLocale"));
+const { app, router, pinia } = await createApp();
 //@ts-ignore
 if (window.__INITIAL_STATE__) {
   //@ts-ignore

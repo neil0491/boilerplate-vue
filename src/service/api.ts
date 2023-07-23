@@ -1,5 +1,4 @@
 import Trans from "@/i18n/translation";
-import { router } from "@/router";
 import { useLoadingStore } from "@/stores/loading";
 import axios, { type CreateAxiosDefaults } from "axios";
 
@@ -35,7 +34,6 @@ fetchData.interceptors.request.use(
     return config;
   },
   (error) => {
-
     return Promise.reject(error);
   }
 );

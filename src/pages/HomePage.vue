@@ -21,7 +21,7 @@ const limit = 16;
 const storeNews = useNewsStore();
 const loadingStore = useLoadingStore();
 onServerPrefetch(async () => {
-  await storeNews.fetchNews({ limit });
+  await storeNews.fetchNews({ limit, offset: 0 });
 });
 
 const countPage = computed(() => {
@@ -31,7 +31,7 @@ const countPage = computed(() => {
   return 0;
 });
 
-storeNews.fetchNews({ limit });
+storeNews.fetchNews({ limit, offset: 0 });
 
 watch(
   () => Trans.currentLocale,

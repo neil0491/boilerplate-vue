@@ -22,6 +22,20 @@ export const useNewsStore = defineStore("news", {
   },
   actions: {
     async fetchNews({ limit, offset = 0 }: { limit: number; offset?: number }) {
+      // try {
+      //   if ("caches" in window) {
+      //     // Cache API is supported
+      //     console.log("cashe");
+
+      //     //You can add your code here
+      //   } else {
+      //     // Cache API is not supported
+      //     console.log("no cashe");
+      //   }
+      // } catch {
+      //   console.log("error Cashe");
+      // }
+
       if (this.news.length > 0 && this.offset === offset) {
         return;
       }
@@ -35,6 +49,9 @@ export const useNewsStore = defineStore("news", {
       }
     },
     async fetchDetailNews({ slug }: { slug: string }) {
+      if (this.detailNews && slug === this.detailNews.url) {
+        return;
+      }
       try {
         const detail = await api.fetchDetailNews({ slug });
         this.detailNews = detail;

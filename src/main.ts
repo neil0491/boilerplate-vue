@@ -10,15 +10,12 @@ import Trans from "./i18n/translation";
 import { createHead } from "unhead";
 import { axiosPlugin } from "./plugins/axiosPlugin";
 
-export async function createApp(cookie?: any) {
-  if (cookie?.["userLocale"]) {
-    //@ts-ignore
-    // i18n.global.locale.value = cookie["userLocale"];
-    await Trans.switchLanguage(cookie["userLocale"]);
-  }
-  //@ts-ignore
-
-  console.log(i18n.global.locale.value);
+export async function createApp() {
+  // if (cookie?.["userLocale"]) {
+  //   //@ts-ignore
+  //   // i18n.global.locale.value = cookie["userLocale"];
+  //   await Trans.switchLanguage(cookie["userLocale"]);
+  // }
   const app = createSSRApp(App);
   const pinia = createPinia();
   app.use(pinia);

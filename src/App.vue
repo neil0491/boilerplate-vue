@@ -9,7 +9,6 @@ import { SITE_NAME } from "@/utils/constants";
 import Logo from "@/assets/logo.svg";
 import { resetAllPiniaStores } from "./utils/resetAllStore";
 
-
 const route = useRoute();
 
 useServerHead({

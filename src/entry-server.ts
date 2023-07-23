@@ -3,8 +3,8 @@ import { renderToString } from "vue/server-renderer";
 import { renderSSRHead } from "@unhead/ssr";
 import { createApp } from "./main";
 
-export async function render(url: string, manifest: any, cookie: any) {
-  const { app, router, head, pinia, i18n } = await createApp(cookie);
+export async function render(url: string, manifest: any) {
+  const { app, router, head, pinia, i18n } = await createApp();
 
   await router.push(url);
   await router.isReady();

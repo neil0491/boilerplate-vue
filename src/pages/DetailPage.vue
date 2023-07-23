@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import { useNewsStore } from "@/stores/news";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import { onServerPrefetch, watch } from "vue";
 import Trans from "@/i18n/translation";
 import { useLoadingStore } from "@/stores/loading";
 
 const route = useRoute();
-const router = useRouter();
 const storeNews = useNewsStore();
 const loadingStore = useLoadingStore();
 

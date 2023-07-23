@@ -76,7 +76,6 @@ export async function createServer(
       let template, render;
 
       const cookie = req.cookies;
-      console.log(cookie["userLocale"]);
       const url = req.originalUrl;
       const cacheKey = getCacheKey(url);
       const isCached = await cache.has(cacheKey);
@@ -96,16 +95,10 @@ export async function createServer(
         // @ts-ignore
         render = (await import("../dist/server/entry-server.js")).render;
       }
-      const [appHtml, preloadLinks, headHtml, state, router, i18n] = await render(
-        url,
-        manifest,
-        cookie
-      );
+      const [appHtml, preloadLinks, headHtml, state, router] = await render(url, manifest, cookie);
 
       const gloableState = JSON.parse(state);
       const currentRouteName = router.currentRoute.value.name;
-
-   
 
       let html = template
         .replace("<!--preload-links-->", preloadLinks)

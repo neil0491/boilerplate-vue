@@ -112,19 +112,19 @@ const Trans = {
     next: NavigationGuardNext
   ) {
     const paramLocale: string = to.params.locale as string;
-    // console.log(paramLocale);
-    // if (to.name === "404") {
-    //   return next();
-    // }
 
     if (paramLocale === "") {
       await Trans.switchLanguage(Trans.defaultLocale);
       return next();
     }
 
-    if (paramLocale === Trans.defaultLocale) {
-      console.log("paramLocale");
+    if (!Trans.isLocaleSupported(paramLocale)) {
+      const locale = to?.params?.catchAll?.toString().split("/")[0] || Trans.currentLocale;
+      await Trans.switchLanguage(Trans.guessDefaultLocale());
+      return next({ ...to, name: "NotFound", params: { locale: locale } });
+    }
 
+    if (paramLocale === Trans.defaultLocale) {
       await Trans.switchLanguage(Trans.guessDefaultLocale());
       return next({
         name: to.name?.toString(),
@@ -132,12 +132,6 @@ const Trans = {
           locale: ""
         }
       });
-    }
-
-    if (!Trans.isLocaleSupported(paramLocale)) {
-      await Trans.switchLanguage(Trans.guessDefaultLocale());
-      // return next({ ...to, name: "404", params: { locale: Trans.currentLocale } });
-      return next(Trans.guessDefaultLocale());
     }
 
     await Trans.switchLanguage(paramLocale);

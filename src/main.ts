@@ -8,8 +8,17 @@ import { router } from "./router";
 import i18n from "./i18n";
 import Trans from "./i18n/translation";
 import { createHead } from "unhead";
+import { axiosPlugin } from "./plugins/axiosPlugin";
 
-export function createApp() {
+export async function createApp(cookie?: any) {
+  if (cookie?.["userLocale"]) {
+    //@ts-ignore
+    // i18n.global.locale.value = cookie["userLocale"];
+    await Trans.switchLanguage(cookie["userLocale"]);
+  }
+  //@ts-ignore
+
+  console.log(i18n.global.locale.value);
   const app = createSSRApp(App);
   const pinia = createPinia();
   app.use(pinia);
@@ -20,6 +29,7 @@ export function createApp() {
 
   const head = createHead() as any;
   app.use(head);
+  app.use(axiosPlugin);
 
   return { app, router, i18n, pinia, head };
 }

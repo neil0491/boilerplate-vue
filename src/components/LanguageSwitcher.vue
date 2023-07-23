@@ -1,10 +1,8 @@
 <script lang="ts" setup>
 import Trans from "@/i18n/translation";
-//@ts-ignore
-import { useI18n } from "vue-i18n";
 import { useRouter } from "vue-router";
 
-const { t, locale } = useI18n();
+// const { t, locale } = useI18n();
 
 const supportedLocales = Trans.supportedLocales;
 
@@ -29,9 +27,9 @@ const switchLanguage = async (event: any) => {
       v-for="sLocale in supportedLocales"
       :key="`locale-${sLocale}`"
       :value="sLocale"
-      :selected="locale === sLocale"
+      :selected="Trans.currentLocale === sLocale"
     >
-      {{ t(`locale.${sLocale}`) }}
+      {{ $t(`locale.${sLocale}`) }}
     </option>
   </select>
 </template>

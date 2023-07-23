@@ -4,14 +4,16 @@ import {
   createMemoryHistory,
   createWebHistory,
   RouterView,
-  type RouteRecordRaw
+  type RouteRecordRaw,
+  type RouteLocationNormalized,
+  type NavigationGuardNext
 } from "vue-router";
 
 const routes: readonly RouteRecordRaw[] = [
   {
     path: "/:locale?",
     component: RouterView,
-    beforeEnter: Trans.routeMiddleware,
+
     children: [
       {
         path: "",
@@ -22,22 +24,32 @@ const routes: readonly RouteRecordRaw[] = [
         path: "about",
         name: "about",
         component: () => import("@/pages/AboutPage.vue")
+      },
+      {
+        path: "news/:slug",
+        name: "DetailPage",
+        component: () => import("@/pages/DetailPage.vue")
+      },
+      {
+        path: "not-found",
+        name: "NotFound",
+        component: () => import("@/pages/404Page.vue")
+      },
+      {
+        path: ":catchAll(.*)",
+        name: "404",
+        component: () => import("@/pages/404Page.vue")
+        // redirect: Trans.i18nRoute({ name: "NotFound" })
       }
     ]
-  },
-  {
-    path: "/not-found",
-    name: "NotFound",
-    component: () => import("@/pages/404Page.vue")
-  },
-  {
-    path: "/:catchAll(.*)",
-    name: "404",
-    redirect: "/not-found",
-    component: () => import("@/pages/404Page.vue"),
-    children: []
   }
 ];
+
+const beforeEach = async (
+  to: RouteLocationNormalized,
+  _from: RouteLocationNormalized,
+  next: NavigationGuardNext
+) => {};
 
 function createRouter() {
   const router = _createRouter({
@@ -46,6 +58,12 @@ function createRouter() {
     history: import.meta.env.SSR ? createMemoryHistory() : createWebHistory(),
     routes: routes
   });
+
+  router.beforeEach(
+    (to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext) => {
+      Trans.routeMiddleware(to, _from, next);
+    }
+  );
 
   return router;
 }

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { watch } from "vue";
 import { RouterLink, RouterView, useRoute } from "vue-router";
 import LanguageSwitcher from "@/components/LanguageSwitcher.vue";
 import { useServerHead } from "unhead";
@@ -6,6 +7,9 @@ import Trans from "./i18n/translation";
 import { SITE_NAME } from "@/utils/constants";
 
 import Logo from "@/assets/logo.svg";
+import { resetAllPiniaStores } from "./utils/resetAllStore";
+
+
 const route = useRoute();
 
 useServerHead({
@@ -37,6 +41,15 @@ const switchTheme = () => {
     body?.classList.add("dark-theme");
   }
 };
+
+watch(
+  () => Trans.currentLocale,
+  (val) => {
+    if (val) {
+      resetAllPiniaStores();
+    }
+  }
+);
 </script>
 
 <template>

@@ -11,7 +11,7 @@ dotenv.config();
 
 const isTest = process.env.VITEST;
 const hmrPort = process.env.PORT || 8080;
-const setCasheTTL = 1 * 60;
+const setCasheTTL = 1;
 
 const getCacheKey = (url) => {
   return `ssr_${url}`;
@@ -75,8 +75,9 @@ export async function createServer(
     try {
       let template, render;
 
+      const cookie = req.cookies;
+      console.log(cookie["userLocale"]);
       const url = req.originalUrl;
-
       const cacheKey = getCacheKey(url);
       const isCached = await cache.has(cacheKey);
 
@@ -95,9 +96,16 @@ export async function createServer(
         // @ts-ignore
         render = (await import("../dist/server/entry-server.js")).render;
       }
-      const [appHtml, preloadLinks, headHtml, state, router] = await render(url, manifest);
+      const [appHtml, preloadLinks, headHtml, state, router, i18n] = await render(
+        url,
+        manifest,
+        cookie
+      );
 
+      const gloableState = JSON.parse(state);
       const currentRouteName = router.currentRoute.value.name;
+
+   
 
       let html = template
         .replace("<!--preload-links-->", preloadLinks)
@@ -109,12 +117,15 @@ export async function createServer(
       });
       cache.set(cacheKey, html, setCasheTTL);
 
-      if (currentRouteName === "NotFound") {
+      if (gloableState?.loading?.status === 404) {
+        res.status(404).set({ "Content-Type": "text/html" }).end(html);
+      } else if (currentRouteName === "NotFound" || currentRouteName === "404") {
         res.status(404).set({ "Content-Type": "text/html" }).end(html);
       } else {
         res.status(200).set({ "Content-Type": "text/html" }).end(html);
       }
     } catch (e) {
+      console.log("error " + e);
       vite && vite.ssrFixStacktrace(e);
       console.log(e.stack);
       res.status(500).end(e.stack);

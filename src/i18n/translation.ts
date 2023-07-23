@@ -56,8 +56,10 @@ const Trans = {
   getUserLocale() {
     try {
       const locale: string =
+        window?.navigator?.language ||
         //@ts-ignore
-        window?.navigator?.language || window?.navigator?.userLanguage || Trans.defaultLocale;
+        window?.navigator?.userLanguage ||
+        Trans.defaultLocale;
 
       return {
         locale: locale,
@@ -74,7 +76,7 @@ const Trans = {
 
   getPersistedLocale() {
     try {
-      const persistedLocale: string | null = localStorage?.getItem("user-locale");
+      const persistedLocale: string | undefined = Cookies.get("userLocale");
       if (persistedLocale && Trans.isLocaleSupported(persistedLocale)) {
         return persistedLocale;
       } else {
@@ -110,12 +112,19 @@ const Trans = {
     next: NavigationGuardNext
   ) {
     const paramLocale: string = to.params.locale as string;
+    // console.log(paramLocale);
+    // if (to.name === "404") {
+    //   return next();
+    // }
+
     if (paramLocale === "") {
       await Trans.switchLanguage(Trans.defaultLocale);
       return next();
     }
 
     if (paramLocale === Trans.defaultLocale) {
+      console.log("paramLocale");
+
       await Trans.switchLanguage(Trans.guessDefaultLocale());
       return next({
         name: to.name?.toString(),
@@ -126,7 +135,9 @@ const Trans = {
     }
 
     if (!Trans.isLocaleSupported(paramLocale)) {
-      return next({ name: "NotFound" });
+      await Trans.switchLanguage(Trans.guessDefaultLocale());
+      // return next({ ...to, name: "404", params: { locale: Trans.currentLocale } });
+      return next(Trans.guessDefaultLocale());
     }
 
     await Trans.switchLanguage(paramLocale);
@@ -138,7 +149,7 @@ const Trans = {
     return {
       ...to,
       params: {
-        locale: Trans.currentLocale === Trans.defaultLocale ? "" : Trans.currentLocale,
+        locale: Trans.currentLocale === Trans.defaultLocale ? "" : Trans.guessDefaultLocale(),
         ...to.params
       }
     };

@@ -3,9 +3,8 @@ import { renderToString } from "vue/server-renderer";
 import { renderSSRHead } from "@unhead/ssr";
 import { createApp } from "./main";
 
-export async function render(url: string, manifest: any) {
-  const { app, router, head, pinia } = createApp();
-  // set the router to the desired URL before rendering
+export async function render(url: string, manifest: any, cookie: any) {
+  const { app, router, head, pinia, i18n } = await createApp(cookie);
 
   await router.push(url);
   await router.isReady();
@@ -24,7 +23,7 @@ export async function render(url: string, manifest: any) {
   const headHtml = await renderSSRHead(head);
   const state = JSON.stringify(pinia.state.value);
 
-  return [html, preloadLinks, headHtml, state, router];
+  return [html, preloadLinks, headHtml, state, router, i18n];
 }
 
 function renderPreloadLinks(modules: any, manifest: any) {

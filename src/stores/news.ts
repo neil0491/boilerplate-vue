@@ -1,37 +1,45 @@
-import { router } from "@/router";
 import { api } from "@/service/api";
-import type { AxiosError } from "axios";
 import { defineStore } from "pinia";
 
 interface IDataFetch {
   news: any[];
-  status: "init" | "loading" | "loaded" | "error" | 404;
+  count: number | null;
+  offset: number;
+  detailNews: any;
 }
 
 export const useNewsStore = defineStore("news", {
   state: (): IDataFetch => ({
     news: [],
-    status: "init"
+    offset: 0,
+    count: null,
+    detailNews: null
   }),
   getters: {
     getNews: (state) => state.news,
-    getStatus: (state) => state.status
+    getCountPage: (state) => state.count,
+    getDetailNews: (state) => state.detailNews
   },
   actions: {
-    async fetchNews() {
+    async fetchNews({ limit, offset = 0 }: { limit: number; offset?: number }) {
+      if (this.news.length > 0 && this.offset === offset) {
+        return;
+      }
       try {
-        this.status = "loading";
-        const news = await api.fetchNews();
+        const news = await api.fetchNews({ limit, offset });
+        this.offset = offset;
+        this.count = news.count;
         this.news = news.results;
-        this.status = "loaded";
       } catch (e: any) {
-        if (e?.response?.status === 404) {
-          this.status = 404;
-          router.push({ name: "NotFound" });
-        } else {
-          this.status = "error";
-        }
-        return e;
+        return {};
+      }
+    },
+    async fetchDetailNews({ slug }: { slug: string }) {
+      try {
+        const detail = await api.fetchDetailNews({ slug });
+        this.detailNews = detail;
+      } catch {
+        return {};
       }
     },
     refreshStore() {
